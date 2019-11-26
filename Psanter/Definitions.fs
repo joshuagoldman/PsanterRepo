@@ -1,75 +1,60 @@
 ﻿module Definitions
 
-type Octave =
+open Controls
+
+
+type Note =
     {
+        Octave : int
         Value : string
     }
 
-type Notes =
-    | C of Octave
-    | CSharp of Octave
-    | D of Octave
-    | DSharp of Octave
-    | E of Octave
-    | F of Octave
-    | FSharp of Octave
-    | G of Octave
-    | GSharp of Octave
-    | A of Octave
-    | ASharp of Octave
-    | B of Octave
-
-type NotInfo =
+type NoteInfo =
     {
-        Note : Notes
         NoteFracInit : float
         NoteFracDuration : float
+        NotesPushed : seq<Note>
     }
 
 type CompositionInfo = 
     {
         Duration : float
-        Notes : seq<NotInfo>
-        Color : string
+        Notes : seq<NoteInfo>
     }
 
 type Parts =
-    | LeftHand of seq<CompositionInfo>
-    | RightHand of seq<CompositionInfo>
+    | LeftHand 
+    | RightHand
+    | Both
 
-type Compsition =
-    | TwinkleLittleStar of Parts
-    | ImprovisationMinor of Parts
+type MusicSource = {Value : string}
 
 type Music =
-    | Classic
-    | Pop
-    | BoogiWoogie
-
-type IntroInfo =
     {
-        Video : string
+        Genre : string
+        Composition : string
+        Hand : Parts
+        Data : CompositionInfo
     }
 
-type MainPageInfo =
-    {
-        BackGroundPicture : string
-    }
-
-type Page =
-    | MainPage of MainPageInfo
-    | Intro of IntroInfo
-    | Training of Music
 
 type State =
     {
-        Activity : Page
+        PageName : string
+        PageActivity : Music
+        PageInfo : seq<Control>
     }
 
 
 type Msg = 
-    | New of Page
-    | Ongoing of Page
-    | DoIntro of Page
+    | MusicGenreClicked of Music
     | PlayLeftOrRight of Parts
     | PlayPart of CompositionInfo
+
+
+
+
+let MainMenuDiv =
+    Div(
+            { PictureSourceVal = ""}
+       )

@@ -1,20 +1,45 @@
 ﻿module App
 
-open Elmish
+open Elmish.React
 open Fable.React
-open Elmish
 open Definitions
 
-let initMainPageInfo = 
+let InitControls =
+    seq [
+            ChooseGenreComboBoxAppearance ;
+            MuteButton ;
+            MainMenuDiv
+        ]
 
-let init() : State = MainPage()
+let initActivity = 
+    BackgroundMusic({Value = "MusicSource"})
+
+let init() : State = 
+    {
+        PageActivity = initActivity  ;
+        PageInfo = InitControls ;
+        PageName = "MainMenu"
+    }
 
 let update (msg : Msg) (state : State) = 
     match msg with
-    | New(page) -> ""
-    | Ongoing(page) -> ""
-    | DoIntro(page) -> ""
-    | PlayLeftOrRight(parts) -> ""
+    | MusicGenreClicked(music) -> 
+        match music with    
+        | Classic(comp) -> 
+            {state with PageActivity = Classic(comp)}
+        | Pop(comp) -> 
+            {state with PageActivity = Pop(comp)}
+        | BoogiWoogie(comp) -> 
+            {state with PageActivity = BoogiWoogie(comp)}
+        | NoMusic(comp) -> 
+            {state with PageActivity = NoMusic(comp)}
+        | BackgroundMusic(comp) -> 
+            {state with PageActivity = BackgroundMusic(comp)}
+
+    | PlayLeftOrRight(parts) -> 
+        { state with state.PageActivity = music}
+        
+
     | PlayPart(compositionInfo) -> ""
 
 let view (state : State) (dispatch : Msg -> unit) = div [] []

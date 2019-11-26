@@ -6,13 +6,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="Controls.fs" />
     <Compile Include="Definitions.fs" />
+    <Compile Include="MusicData.fs" />
+    <Compile Include="MainMenu.fs" />
+    <Compile Include="MainMenuView.fs" />
     <Compile Include="App.fs" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Elmish" Version="4.0.0-alpha-1" />
     <PackageReference Include="Fable.Elmish" Version="4.0.0-alpha-1" />
+    <PackageReference Include="Fable.Elmish.React" Version="4.0.0-alpha-1" />
     <PackageReference Include="Fable.React" Version="6.0.0-beta-001" />
   </ItemGroup>
 
