@@ -42,19 +42,13 @@ type State =
     {
         PageName : string
         PageActivity : Music
-        PageInfo : seq<Control>
+        PageInfo : Page
     }
 
 
 type Msg = 
+    | MainMenuButtonClicked of string
     | MusicGenreClicked of Music
     | PlayLeftOrRight of Parts
     | PlayPart of CompositionInfo
 
-
-
-
-let MainMenuDiv =
-    Div(
-            { PictureSourceVal = ""}
-       )

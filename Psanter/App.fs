@@ -2,47 +2,46 @@
 
 open Elmish.React
 open Fable.React
+open Elmish
 open Definitions
-
-let InitControls =
-    seq [
-            ChooseGenreComboBoxAppearance ;
-            MuteButton ;
-            MainMenuDiv
-        ]
-
-let initActivity = 
-    BackgroundMusic({Value = "MusicSource"})
+open Controls
+open MainMenu
+open MusicData
 
 let init() : State = 
     {
-        PageActivity = initActivity  ;
-        PageInfo = InitControls ;
+        PageActivity = allMusicPieces |> Seq.item(0) ;
+        PageInfo = initPage ;
         PageName = "MainMenu"
     }
 
 let update (msg : Msg) (state : State) = 
     match msg with
+    | MainMenuButtonClicked(color) -> 
+        {state with
+            PageInfo = { state.PageInfo with
+                          MainMenu =
+                            { state.PageInfo.MainMenu with
+                               MainDivButton =
+                                { state.PageInfo.MainMenu.MainDivButton with
+                                   Color = color }}}}
+
     | MusicGenreClicked(music) -> 
-        match music with    
-        | Classic(comp) -> 
-            {state with PageActivity = Classic(comp)}
-        | Pop(comp) -> 
-            {state with PageActivity = Pop(comp)}
-        | BoogiWoogie(comp) -> 
-            {state with PageActivity = BoogiWoogie(comp)}
-        | NoMusic(comp) -> 
-            {state with PageActivity = NoMusic(comp)}
-        | BackgroundMusic(comp) -> 
-            {state with PageActivity = BackgroundMusic(comp)}
+        state
 
     | PlayLeftOrRight(parts) -> 
-        { state with state.PageActivity = music}
+        state
         
 
-    | PlayPart(compositionInfo) -> ""
+    | PlayPart(compositionInfo) -> 
+        state
 
-let view (state : State) (dispatch : Msg -> unit) = div [] []
+let view (state : State) (dispatch : Msg -> unit) = 
+    match state.PageName with
+    | "MainMenu" -> MainMenuPage state dispatch
+    | _ -> MainMenuPage state dispatch
+
+
 
 Program.mkSimple init update view
 |> Program.withReactSynchronous "elmish-app"

@@ -1,79 +1,54 @@
 ﻿module Controls
 
-
-type BackgroundColor = {BackgroundColorVal : string}
-type Text = {TextVal : string}
-type TextColor = {TextColorVal : string}
-type VideoSource = {VideoSourceVal : string}
-type PictureSource = {PictureSourceVal : string}
-type Font = {FontVal : string}
-type TextSize = {TextSizeVal : string}
-type FontFamily = {FontFamilyVal : string}
-type Visible = {VisibleVal : bool}
-type Alternatives = {AlternativesVal : seq<Text>}
-type ControlID = {ID : string}
-
-type Control =
-    | Button of ControlID * BackgroundColor * Text * Font * TextSize * FontFamily * Visible
-    | TextArea of ControlID * BackgroundColor * Text * Font * TextSize * FontFamily * Visible
-    | Picture of ControlID * PictureSource * Visible
-    | Video of ControlID * VideoSource * Visible
-    | Block of ControlID * BackgroundColor * Text * Font * TextSize * FontFamily * Visible
-    | ComboBox of ControlID * Alternatives * Font * TextSize * FontFamily * Visible
-    | Div of ControlID * PictureSource
-
-type Button =
+type AppearanceAttributes =
     {
-        ButtonColor : BackgroundColor
-        ButtonText : Text
-        ButtonFont : Font
-        ButtonTextSize : TextSize
-        ButtonFontFamily : FontFamily
-        ButtonVisibility : Visible
-
+        Color : string
+        Text_decoration : string
+        Padding : string
+        Font_Family : seq<string>
+        Font_Size : string
+        Position : string
+        top : float
+        left : float
+        Background : string
+        height : string
+        width : string
+        transition : string
+        Display : string
     }
 
-type TextArea =
+type MainMenuElements =
     {
-        TextAreaColor : BackgroundColor
-        TextAreaText : Text
-        TextAreaFont : Font
-        TextAreaTextSize : TextSize
-        TextAreaFontFamily : FontFamily
-        TextAreaVisibility : Visible
-
+        MainDivButton : AppearanceAttributes
+        GenreCombobox : AppearanceAttributes
+        MuteButton : AppearanceAttributes
     }
 
-type Picture =
+type Page =
     {
-        Source : PictureSource
-        PictureVisibility : Visible
+        MainMenu : MainMenuElements
     }
 
-type Video =
+
+let defaultAppearanceAttributes = 
     {
-        Source : VideoSource
-        VideoVisibility : Visible
+        Color = "White" ;
+        Text_decoration = "none" ;
+        Padding = "5px 20px" ;
+        Font_Family = seq[ "Roboto" ; "sans-serif"] ;
+        Font_Size = "15px"
+        Position = "" ;
+        top = 10.0 ;
+        left = 10.0 ;
+        Background = "" ;
+        height = "" ;
+        width = "" ;
+        transition = "" ;
+        Display = "inline-block"
     }
 
-type TextBlock =
-    {
-        TextBlockColor : BackgroundColor
-        TextBlockText : Text
-        TextBlockFont : Font
-        TextBlockTextSize : TextSize
-        TextBlockFontFamily : FontFamily
-        TextBlockVisibility : Visible
-    }
-
-type ComboBox =
-    {
-        ComboBoxAlternatives : Alternatives
-        ComboBoxBlockText : Text
-        ComboBoxBlockFont : Font
-        ComboBoxBlockTextSize : TextSize
-        ComboBoxBlockFontFamily : FontFamily
-        ComboBoxBlockVisibility : Visible
-    }
-
+let initPage = { MainMenu = 
+                    { MainDivButton = defaultAppearanceAttributes ;
+                      GenreCombobox = defaultAppearanceAttributes ;
+                      MuteButton = defaultAppearanceAttributes }}
 
