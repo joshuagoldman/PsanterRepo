@@ -28,9 +28,16 @@ type MainMenuElements =
         MuteButton : AppearanceAttributes
     }
 
+type ExercisePageElements =
+    {
+        ChooseHandAlternatives : AppearanceAttributes
+        ChooseSongComboBox : AppearanceAttributes
+
+    }
 type Page =
     {
         MainMenu : MainMenuElements
+        ExercisePage : ExercisePageElements
     }
 
 
@@ -55,9 +62,14 @@ let defaultAppearanceAttributes =
         MuteMusic = false
     }
 
-let initPage = { MainMenu = 
+let initPages = { MainMenu = 
                     { MainDivButton = defaultAppearanceAttributes ;
                       GenreCombobox = defaultAppearanceAttributes ;
                       MuteButton = { defaultAppearanceAttributes 
-                                     with Picture = "Pictures/MusicPicture.jpg" } }}
+                                     with Picture = "Pictures/MusicPicture.jpg" }
+                                     }
+                  ExercisePage =
+                    { ChooseHandAlternatives = defaultAppearanceAttributes ;
+                      ChooseSongComboBox = defaultAppearanceAttributes}
+                      }
 

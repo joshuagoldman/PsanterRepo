@@ -1,70 +1,69 @@
-﻿module MusicData
+﻿
+module MusicData
 
 open Controls
 open Definitions
+open MusicLogic
+
+let twinkleLittleStarRightHandData =
+    seq
+        [
+            "1.0;2e,2g,3c"
+            "1.0;2e,2g,3c"
+            "1.0;2c,3e,3g"
+            "1.0;2c,3e,3g"
+            "1.0;2c,3f,3a"
+            "1.0;2c,3f,3a"
+            "2.0;2c,3e,3g"
+            "1.0;2a,3c,2f"
+            "1.0;2a,3c,2f"
+            "1.0;2g,3c,3e"
+            "1.0;2g,3c,3e"
+            "1.0;2g,2b,2d"
+            "1.0;2g,2b,2d"
+            "2.0;2e,2g,3c"
+        ]
 
 let TwinkleLittleStarRightHand =
-    seq[
-            { NoteFracInit = 1.0 ;
-              NoteFracDuration = 1.0 ;
-              NotesPushed =
-                seq[
-                        { Octave = 3 ; Value = "C" }
-                   ]} ;
+    noteParser twinkleLittleStarRightHandData
 
-            { NoteFracInit = 1.0 ;
-              NoteFracDuration = 1.0 ;
-              NotesPushed =
-                seq[
-                        { Octave = 3 ; Value = "C" }
-                   ]} ;
-
-            { NoteFracInit = 1.0 ;
-              NoteFracDuration = 1.0 ;
-              NotesPushed =
-                seq[
-                        { Octave = 3 ; Value = "E" }
-                   ]} ;
-
-            { NoteFracInit = 1.0 ;
-              NoteFracDuration = 1.0 ;
-              NotesPushed =
-                seq[
-                        { Octave = 3 ; Value = "E" }
-                   ]} ;
-       ]
+let twinkleLittleStarLeftHandData =
+    seq
+        [
+            "0.5;1c"
+            "0.5;1g"
+            "0.5;2c"
+            "0.5;1g"
+            "0.5;1c"
+            "0.5;1g"
+            "0.5;2c"
+            "0.5;1g"
+            "0.5;1f"
+            "0.5;2c"
+            "0.5;2f"
+            "0.5;2c"
+            "0.5;1c"
+            "0.5;1g"
+            "0.5;2c"
+            "0.5;1g"
+            "0.5;1f"
+            "0.5;2c"
+            "0.5;2f"
+            "0.5;2c"
+            "0.5;1c"
+            "0.5;1g"
+            "0.5;2c"
+            "0.5;1g"
+            "0.5;1g"
+            "0.5;2d"
+            "0.5;2f"
+            "0.5;2d"
+            "0.25;1c"
+            "0.25;1e"
+            "0.25;1g"
+            "0.25;2c"
+            "1;1c,1e,1g,2c"
+        ]
 
 let TwinkleLittleStarLeftHand =
-    seq[
-            { NoteFracInit = 1.0 ;
-              NoteFracDuration = 1.0 ;
-              NotesPushed =
-                seq[
-                        { Octave = 3 ; Value = "C" } ;
-                        { Octave = 3 ; Value = "E" } ;
-                        { Octave = 3 ; Value = "G" }
-                   ]} ;
-
-            { NoteFracInit = 1.0 ;
-              NoteFracDuration = 1.0 ;
-              NotesPushed =
-                seq[
-                        { Octave = 3 ; Value = "C" } ;
-                        { Octave = 3 ; Value = "E" } ;
-                        { Octave = 3 ; Value = "G" }
-                   ]} ;
-       ]
-
-
-let compositions =
-    seq [
-            { Duration = 1.0 ;
-              Notes =  TwinkleLittleStarRightHand }
-        ]
-
-let allMusicPieces = 
-    seq [
-            { Genre = "" ; Composition = "" ;
-              Hand = Parts.Both ;
-              Data = compositions|> Seq.item(0)}
-        ]
+    noteParser twinkleLittleStarLeftHandData

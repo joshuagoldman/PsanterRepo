@@ -7,11 +7,11 @@ type Note =
     {
         Octave : int
         Value : string
+        Appearance : AppearanceAttributes
     }
 
 type NoteInfo =
     {
-        NoteFracInit : float
         NoteFracDuration : float
         NotesPushed : seq<Note>
     }
@@ -49,6 +49,7 @@ type State =
 type Msg = 
     | HoverOverGenreButton of string
     | MutButtonClicked of string * bool
+    | GenreChosen of State
     | MusicGenreClicked of Music
     | PlayLeftOrRight of Parts
     | PlayPart of CompositionInfo

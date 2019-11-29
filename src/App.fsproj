@@ -9,7 +9,9 @@
   <ItemGroup>
     <Compile Include="Controls.fs" />
     <Compile Include="Definitions.fs" />
+    <Compile Include="MusicLogic.fs" />
     <Compile Include="MusicData.fs" />
+    <Compile Include="ExercisePage.fs" />
     <Compile Include="MainMenu.fs" />
     <Compile Include="App.fs" />
   </ItemGroup>
