@@ -4,6 +4,7 @@ open Definitions
 open Controls
 open Fable.React.Standard
 open MusicData
+open MusicLogic
 open Fable.React
 open Fable.React.Props
 open Feliz
