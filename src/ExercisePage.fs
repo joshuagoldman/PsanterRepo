@@ -85,28 +85,34 @@ let whiteKeys ( state : State ) ( dispatch : Msg -> unit ) =
                 ]
         ]
 
-let whilteKeysStyle = 
+let whiteKeysStyle = 
     prop.style
         [
             style.position.inheritFromParent
-            style.margin(80, 25, 0, 25)
+            style.margin(80, 20, 0, 15)
         ]
 
 let blackKeysStyle = 
     prop.style
         [
             style.position.inheritFromParent
-            style.margin(80, 35, 0, 45)
+            style.margin(80, 40, 0, 35)
         ]
     
 let piano ( state : State ) ( dispatch : Msg -> unit ) =
     let whiteKeysCodes = [ 1..7 ]
     let allWhiteKeys = Seq.append whiteKeysCodes whiteKeysCodes
                        |> Seq.append whiteKeysCodes
+                       |> Seq.append whiteKeysCodes
+                       |> Seq.append whiteKeysCodes
+                       |> Seq.append whiteKeysCodes
                        |> Seq.map (fun _ -> whiteKeys state dispatch)
     
     let blackKeysCodes = [ 10 ; 41 ; 9 ; 9 ; 41]
-    let allBlackKeys = Seq.append blackKeysCodes blackKeysCodes
+    let allBlackKeys = Seq.append blackKeysCodes [ 10 ; 41 ; 9 ; 9 ; 0] 
+                       |> Seq.append blackKeysCodes
+                       |> Seq.append blackKeysCodes
+                       |> Seq.append blackKeysCodes
                        |> Seq.append blackKeysCodes
                        |> Seq.map (fun margin -> blackKeys state
                                                            dispatch
@@ -119,12 +125,11 @@ let piano ( state : State ) ( dispatch : Msg -> unit ) =
                     style.opacity 0.95
                     style.backgroundImage "linear-gradient(#E4A91E,#884E06)"
                     style.height 450
-                    style.width 680
+                    style.width 1300
                     style.borderRadius 20
                     style.border("5px", borderStyle.groove , "#130907")
                     style.position.fixedRelativeToWindow
-                    style.left 300
-                    style.top 100
+                    style.margin(100, 30, 500, 20)
                 ]
             
             prop.children
@@ -132,7 +137,7 @@ let piano ( state : State ) ( dispatch : Msg -> unit ) =
 
                     Html.div
                         [
-                            whilteKeysStyle
+                            whiteKeysStyle
                             prop.children allWhiteKeys
                         ] 
 
