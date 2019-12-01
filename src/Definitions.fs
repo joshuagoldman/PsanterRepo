@@ -35,6 +35,7 @@ type Music =
         Composition : string
         Hand : Parts
         Data : seq<CompositionInfo>
+        NotesCurrentlyPushed : seq<Note>
     }
 
 

@@ -19,9 +19,15 @@ let compositions =
 
 let allMusicPieces = 
     seq [
-            { Genre = "Pop" ; Composition = "Twinkle Twinkle Little Star" ;
+            { Genre = "Pop" ;
+              Composition = "Twinkle Twinkle Little Star" ;
               Hand = Parts.Both ;
-              Data = compositions }
+              Data = compositions ;
+              NotesCurrentlyPushed =  compositions 
+                                      |> Seq.item(0)
+                                      |> fun x -> x.Notes
+                                                  |> Seq.item(0)
+                                                  |> fun x -> x.NotesPushed}
         ]
 
 let goBackButton (state : State) ( dispatch : Msg -> unit ) = 
@@ -45,9 +51,31 @@ let goBackButton (state : State) ( dispatch : Msg -> unit ) =
                 ]
         ]
 
+let blackOrWhite ( keyName : string ) =
+    seq [ "c#" ; "d#" ; "f#" ; "g#" ; "a#" ]
+    |> Seq.tryFind (fun key -> key = keyName)
+    |> function 
+       | res when res = None -> "white"
+       | _ -> "black"
+
+let getKeyColor ( state : State ) 
+                ( octave : int )
+                ( note : string ) =
+    let result =
+        state.PageActivity.NotesCurrentlyPushed
+        |> Seq.tryFind (fun currNote -> currNote.Octave = octave &&
+                                        currNote.Value = note)
+        |> function 
+           | res when res = None -> blackOrWhite note
+           | _ -> "red"
+           
+    result
+
 let blackKeys ( state : State )
               ( dispatch : Msg -> unit )
-              ( margin : int )=
+              ( info : {| Margin : int ;
+                          Note : string ;
+                          Octave : int |} ) =
     
     Html.div
         [
@@ -56,9 +84,11 @@ let blackKeys ( state : State )
                     style.width 20
                     style.height 70
                     style.border("2px", borderStyle.groove , "black")
-                    style.backgroundColor "black"
+                    style.backgroundColor (getKeyColor state
+                                                       info.Octave
+                                                       info.Note)
                     style.display.inlineBlock
-                    style.marginRight margin
+                    style.marginRight info.Margin
                 ]
 
             prop.children
@@ -66,7 +96,10 @@ let blackKeys ( state : State )
                     
                 ]
         ]
-let whiteKeys ( state : State ) ( dispatch : Msg -> unit ) =
+let whiteKeys ( state : State ) 
+              ( dispatch : Msg -> unit )
+              ( info : {| Note : string ;
+                          Octave : int |} ) =
     
     Html.div
         [
@@ -75,7 +108,9 @@ let whiteKeys ( state : State ) ( dispatch : Msg -> unit ) =
                     style.width 30
                     style.height 120
                     style.border("2px", borderStyle.groove , "black")
-                    style.backgroundColor "white"
+                    style.backgroundColor (getKeyColor state
+                                                       info.Octave
+                                                       info.Note)
                     style.display.inlineBlock
                 ]
 
@@ -100,23 +135,15 @@ let blackKeysStyle =
         ]
     
 let piano ( state : State ) ( dispatch : Msg -> unit ) =
-    let whiteKeysCodes = [ 1..7 ]
-    let allWhiteKeys = Seq.append whiteKeysCodes whiteKeysCodes
-                       |> Seq.append whiteKeysCodes
-                       |> Seq.append whiteKeysCodes
-                       |> Seq.append whiteKeysCodes
-                       |> Seq.append whiteKeysCodes
-                       |> Seq.map (fun _ -> whiteKeys state dispatch)
-    
-    let blackKeysCodes = [ 10 ; 41 ; 9 ; 9 ; 41]
-    let allBlackKeys = Seq.append blackKeysCodes [ 10 ; 41 ; 9 ; 9 ; 0] 
-                       |> Seq.append blackKeysCodes
-                       |> Seq.append blackKeysCodes
-                       |> Seq.append blackKeysCodes
-                       |> Seq.append blackKeysCodes
-                       |> Seq.map (fun margin -> blackKeys state
+    let allWhiteKeys = whiteKeysInfo
+                       |> Seq.map (fun info -> whiteKeys state
+                                                         dispatch
+                                                         info)
+
+    let allBlackKeys = BlackKeysInfo
+                       |> Seq.map (fun info -> blackKeys state
                                                            dispatch
-                                                           margin)
+                                                           info)
     Html.div
         [
             
