@@ -36,7 +36,16 @@ let update (msg : Msg) (state : State) =
                                 { state.PageInfo.MainMenu.MuteButton with
                                    Picture = pic ; MuteMusic = mute }}}}
 
-    | GenreChosen(stateNew) -> stateNew
+    | NewMusicToPlay(music) -> 
+        {state with
+            PageInfo = { state.PageInfo with
+                          MainMenu =
+                            { state.PageInfo.MainMenu with
+                               MuteButton =
+                                { state.PageInfo.MainMenu.MuteButton with
+                                   BackgroundMusic = music }}}}
+
+    | NewPage(stateNew) -> stateNew
 
     | MusicGenreClicked(music) -> 
         state
@@ -50,7 +59,7 @@ let update (msg : Msg) (state : State) =
 
 let render (state : State) (dispatch : Msg -> unit) = 
     match state.PageName with
-    | "MainMenu" -> MainMenuPage state dispatch
+    | "MainMenu" -> exercisePage state dispatch
     | "ExercisePage" -> exercisePage state dispatch
     | _ -> MainMenuPage state dispatch
     

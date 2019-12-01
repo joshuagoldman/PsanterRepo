@@ -34,7 +34,7 @@ type Music =
         Genre : string
         Composition : string
         Hand : Parts
-        Data : CompositionInfo
+        Data : seq<CompositionInfo>
     }
 
 
@@ -49,8 +49,10 @@ type State =
 type Msg = 
     | HoverOverGenreButton of string
     | MutButtonClicked of string * bool
-    | GenreChosen of State
+    | NewPage of State
+    | NewMusicToPlay of string
     | MusicGenreClicked of Music
     | PlayLeftOrRight of Parts
     | PlayPart of CompositionInfo
+
 

@@ -5,6 +5,16 @@ open Controls
 open Definitions
 open MusicLogic
 
+let allMusic = 
+    seq
+        [
+           "Music/Crow.mp3"
+           "Music/ClairDeLune.mp3"
+           "Music/EvgenisWaltz.mp3"
+           "Music/Debussy_Reverie.mp3"
+           "Music/MoonlightSonata.mp3"
+        ]
+
 let twinkleLittleStarRightHandData =
     seq
         [
@@ -67,3 +77,28 @@ let twinkleLittleStarLeftHandData =
 
 let TwinkleLittleStarLeftHand =
     noteParser twinkleLittleStarLeftHandData
+
+let getRightMusic ( composition : string ) = 
+    match composition with
+    | "TwinkleLittleStar" -> seq
+                                [
+                                    {
+                                        Duration = 1.0
+                                        Notes = TwinkleLittleStarLeftHand
+                                    }
+                                    {
+                                       Duration = 1.0
+                                       Notes = TwinkleLittleStarRightHand
+                                    }
+                                ]
+    | _ -> seq
+            [
+                {
+                    Duration = 1.0
+                    Notes = TwinkleLittleStarLeftHand
+                }
+                {
+                   Duration = 1.0
+                   Notes = TwinkleLittleStarRightHand
+                }
+            ]

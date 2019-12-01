@@ -2,44 +2,12 @@
 
 open Definitions
 open Controls
+open MusicData
+open MusicLogic
 open Fable.React.Standard
 open Fable.React
 open Fable.React.Props
 open System
-
-let configMainMenuButtonStyle ( opacity : string) = 
-    Props.Style[ 
-                    BorderRadius "50px"
-                    Height "20%"
-                    Padding("10em") 
-                    Width("fit-content")
-                    Padding "5px"
-                    Background "radial-gradient(circle at 0px 0px, #E4A91E 0%, #884E06 100%)" 
-                    Opacity opacity
-                    FontSize "25px"
-                    FontWeight "bold"
-                    BorderWidth "5px"
-                    BorderColor "black"
-                    Margin "1.5em 1em 0.5em 0.5em"
-                    FontFamily "Comic Sans MS, Comic Sans, cursive"
-                    Outline "none"]
-
-let configMuteButtonStyle ( opacity : string) = 
-    Props.Style[ 
-                    BorderRadius "50px"
-                    Height "10%"
-                    Padding("10em") 
-                    Width("fit-content")
-                    Padding "5px"
-                    Background "radial-gradient(circle at 0px 0px, #E4A91E 0%, #884E06 100%)" 
-                    Opacity opacity
-                    FontSize "15px"
-                    FontWeight "bold"
-                    BorderWidth "5px"
-                    BorderColor "black"
-                    Margin "1.5em 1em 0.5em 0.5em"
-                    FontFamily "Comic Sans MS, Comic Sans, cursive"
-                    Outline "none"]
 
 let selectOpacity (xPos : float) (yPos : float) =
    let xCnst = 1349.0
@@ -59,7 +27,10 @@ let MuteMusicOrTurnItOn (value : bool) =
     then false
     else true
         
-let createSelectItem ( value : string) ( pos : string) =
+let createSelectItem ( value : string ) 
+                     ( pos : string )
+                     ( state : State )
+                     ( dispatch : Msg -> unit ) =
     option [
                 Value (if pos = "0" then "" else pos)
                 Props.Style
@@ -71,12 +42,31 @@ let createSelectItem ( value : string) ( pos : string) =
                         BorderWidth "5px"
                         BorderColor "black"
                     ]
+
            ] [ str value]
 
-let mutButtonHtml (picture : string)
-                  ( configMuteButtonStyle : HTMLAttr)
-                  ( muteMusicOrNot : bool)
-                  (dispatch : Msg -> unit) =
+let loader (state : State )  = 
+        div
+            [
+                Style
+                    [
+                        Border "16px solid #f3f3f3" 
+                        BorderTop "16px solid #3498db" 
+                        BorderRadius "50%"
+                        Width "120px"
+                        Height "120px"
+                        Visibility "hidden"
+                        Position PositionOptions.Absolute
+                        Left "45%"
+                        Top "60%"
+                    ]
+            ]
+            []
+
+let mutButtonHtml ( picture : string )
+                  ( configMuteButtonStyle : HTMLAttr )
+                  ( muteMusicOrNot : bool )
+                  ( dispatch : Msg -> unit ) =
     button 
      [
          configMuteButtonStyle 
@@ -103,20 +93,28 @@ let mutButtonHtml (picture : string)
 
      ]
 
-let audioHtml ( muteMusicOrNot : bool ) =
+let audioHtml ( state : State ) ( dispatch : Msg -> unit) =
+    let muteMusicOrNot = state.PageInfo.MainMenu.MuteButton.MuteMusic
+
+    let currentMusicPlayed = 
+        if state.PageInfo.MainMenu.MuteButton.BackgroundMusic = ""
+        then allMusic |> Seq.item(0)
+        else state.PageInfo.MainMenu.MuteButton.BackgroundMusic
+
     audio 
         [ 
             AutoPlay true
             Muted muteMusicOrNot
-            Loop true
+            Hidden true
         ]
         [
             source
                 [
-                    Src "Music/Debussy_Reveie.mp3"
+                    Src "Music/Playlist.mp3"
                     Typeof "audio/mpeg"
                 ]
         ]
+
 
 let backgroundVideo = 
     video 
@@ -139,57 +137,87 @@ let backgroundVideo =
                 ]
         ]
 
-let SelectItems (selecteItemsDropDown : seq<string>)  =
+let SelectItems (selecteItemsDropDown : seq<string>)
+                ( state : State )
+                ( dispatch : Msg -> unit ) =
     Seq.zip selecteItemsDropDown [0..(selecteItemsDropDown |> Seq.length) - 1]
-    |> Seq.map (fun (item,position) -> createSelectItem item (position |> string))
+    |> Seq.map (fun (item,position) -> createSelectItem item
+                                                        (position |> string)
+                                                        state
+                                                        dispatch)
 
-let mainMenuButtons (state : State) (dispatch : Msg -> unit) =
-    let selecteItemsDropDown = state.PageInfo.MainMenu.MainDivButton.SelectItems
-    let opacity = state.PageInfo.MainMenu.MainDivButton.Opacity
-    let MainMenuButtonStyle = configMainMenuButtonStyle opacity
+let GenreSelectedActions ( state : State )
+                         ( dispatch : Msg -> unit ) =
+    { state with PageName = "ExercisePage" }
+    |> fun newState -> { newState with          
+                          PageActivity = 
+                            { newState.PageActivity with
+                               Data = (getRightMusic newState.PageActivity.Composition)
+                            }
+                        }
+    |> NewPage 
+    |> dispatch 
+
+let muteButtonDiv ( state : State) ( dispatch : Msg -> unit ) =
     let mutePicture = state.PageInfo.MainMenu.MuteButton.Picture
+    let opacity = state.PageInfo.MainMenu.MainDivButton.Opacity
     let muteMusicOrNot = state.PageInfo.MainMenu.MuteButton.MuteMusic
-
     [
         div
             [
                 Props.Style 
                     [
                         Position PositionOptions.Relative
-                        Float "right"
+                        Float FloatOptions.Right
                     ]
             ]
             [ 
                 mutButtonHtml (mutePicture)
-                              (configMuteButtonStyle opacity)
+                              (Style (configMuteButtonStyle opacity))
                               (muteMusicOrNot)
                               (dispatch)
             ]
 
-        div
-            [
-                Props.Style 
-                    [
-                        Margin "1.5em 1em 0.5em 0.5em"
-                        Position PositionOptions.Absolute
-                        Left "37%"
-                        Top "30%"
-                    ]
-            ]
-            [
-                   select
-                        [
-                            MainMenuButtonStyle
-                        ]
-
-                        (SelectItems selecteItemsDropDown) ;
-               
-                   audioHtml muteMusicOrNot
-        ] 
+        audioHtml state dispatch
     ]
 
-let MainMenuPage ( state : State) (dispatch : Msg -> unit) =
+let mainMenuButton (state : State) (dispatch : Msg -> unit) =
+    let selecteItemsDropDown = state.PageInfo.MainMenu.MainDivButton.SelectItems
+    let opacity = state.PageInfo.MainMenu.MainDivButton.Opacity
+    let MainMenuButtonStyle = configMainMenuButtonStyle opacity
 
+    div
+        [
+            Props.Style 
+                [
+                    Margin "1.5em 1em 0.5em 0.5em"
+                    Position PositionOptions.Absolute
+                    Right "37%"
+                    TextAlign TextAlignOptions.Center
+                    Top "30%"
+                ]
+
+        ]
+        [
+               select
+                    [
+                        Style MainMenuButtonStyle
+
+                        OnChange (fun _ -> 
+                                    GenreSelectedActions state
+                                                         dispatch)
+                    ]
+
+                    (SelectItems selecteItemsDropDown state dispatch) 
+    ] 
+    
+let mainMenuButtons (state : State) (dispatch : Msg -> unit) =
+    
+    muteButtonDiv state dispatch
+    |> List.append [mainMenuButton state dispatch]
+    |> List.append [loader state]
+
+let MainMenuPage ( state : State ) ( dispatch : Msg -> unit ) =
 
     header 
         [
@@ -200,5 +228,8 @@ let MainMenuPage ( state : State) (dispatch : Msg -> unit) =
         ]
         [
             div[]
-                (Seq.append [backgroundVideo] (mainMenuButtons state dispatch))
+                (mainMenuButtons state dispatch
+                |> List.append [backgroundVideo])
+
+            div[] [ str state.PageInfo.MainMenu.MuteButton.BackgroundMusic]
         ] 
